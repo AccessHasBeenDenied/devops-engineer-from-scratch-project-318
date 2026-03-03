@@ -1,0 +1,26 @@
+---
+- name: Pull image
+  community.docker.docker_image_pull:
+    name: "{{ current_image }}"
+- name: Create/Update Container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ current_image }}"
+    command: "{{ container_command }}"
+    command_handling: "{{ container_command_handling }}"
+    entrypoint: "{{ container_entrypoint }}"
+    env: "{{ container_env }}"
+    ports: "{{ container_ports }}"
+    volumes: "{{ container_volumes }}"
+    healthcheck: "{{ container_healthcheck }}"
+    restart_policy: "{{ container_restart_policy }}"
+    state: present
+- name: Start Container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    state: started
+- name: Wait Healthy
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    state: healthy
+    healthy_wait_timeout: "{{ container_healthy_wait_timeout }}"

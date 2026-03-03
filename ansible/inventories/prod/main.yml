@@ -1,0 +1,11 @@
+all:
+  children:
+    webservers:
+      hosts:
+        webserver
+    workers:
+      hosts:
+        webserver
+    db:
+      hosts:
+        dbserver

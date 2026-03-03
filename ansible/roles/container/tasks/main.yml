@@ -1,0 +1,20 @@
+---
+# tasks file for container
+- name: Init Environment
+  ansible.builtin.include_tasks:
+    file: init_env.yml
+
+- name: Run Environment
+  block:
+    - name: Deploy Container
+      ansible.builtin.include_tasks:
+        file: deploy_container.yml
+      vars:
+        current_image: "{{ container_image }}"
+  rescue:
+    - name: RollBack Container
+      ansible.builtin.include_tasks:
+        file: deploy_container.yml
+      vars:
+        current_image: "{{ container_name.container_previous_version }}"
+      when: container_previous_version is defined

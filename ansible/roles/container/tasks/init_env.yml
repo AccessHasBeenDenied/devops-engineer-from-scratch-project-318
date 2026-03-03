@@ -1,0 +1,52 @@
+---
+- name: Init Environment
+  block:
+    - name: Creating Data Dir
+      ansible.builtin.file:
+        path: "{{ container_data_dir }}"
+        state: directory
+        mode: "0750"
+    - name: Creating Log Dir
+      ansible.builtin.file:
+        path: "{{ container_log_dir }}"
+        state: directory
+        mode: "0750"
+
+- name: Getting Current App Version
+  block:
+    - name: Create directory for ansible custom facts
+      ansible.builtin.file:
+        state: directory
+        recurse: true
+        path: /etc/ansible/facts.d
+
+    - name: Getting Current Version
+      community.docker.docker_container_info:
+        name: "{{ container_name }}"
+      register: container_result
+
+    - name: Save Current Version as Previous
+      ansible.builtin.set_fact:
+        container_previous_version: "{{ container_result.container.Config.Image }}"
+      when: container_result.exists
+
+    - name: Save to facts.d
+      ansible.builtin.copy:
+        content: |
+          {
+            "{{ container_name }}": {
+              "container_previous_version": "{{ container_previous_version | default('none') }}"
+            }
+          }
+        dest: /etc/ansible/facts.d/{{ container_name }}.fact
+        mode: "0644"
+      when: container_previous_version is defined
+
+    - name: Re-read facts after adding custom fact
+      ansible.builtin.setup:
+        filter: ansible_local
+
+    - name: Print Current Version
+      ansible.builtin.debug:
+        var: container_previous_version
+      when: container_previous_version is defined

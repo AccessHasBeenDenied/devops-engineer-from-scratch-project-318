@@ -1,0 +1,45 @@
+domain_name: bulletin.example.ru
+
+# frontend static files configuration
+frontend_artifact: https://registry.npmjs.org/@_accesshasbeendenied/project-devops-deploy-frontend/-/project-devops-deploy-frontend-0.0.5.tgz
+
+# certbot configuration
+certbot_admin_email: https@servercheck.in
+certbot_create_if_missing: true
+certbot_create_method: webroot
+certbot_testmode: true
+certbot_certs:
+  - name: "{{ domain_name }}"
+    webroot: "{{ vhost_root }}"
+    domains:
+      - "{{ domain_name }}"
+    deploy_hook: >-
+      mkdir -p /etc/nginx/ssl;
+      cp -Lr /etc/letsencrypt/live/{{ domain_name }} /etc/nginx/ssl;
+
+# nginx configuration
+vhost_root: /var/www/html
+nginx_upstreams:
+- name: worker
+  servers:
+    - localhost:8080
+
+nginx_remove_default_vhost: true
+nginx_vhosts:
+  - listen: "80 default_server"
+    server_name: "_"
+    extra_parameters: |
+      location / {
+          root {{ vhost_root }};
+          try_files $uri $uri/ =404;
+          index index.html;
+      }
+
+      location ~ ^(/api/|/swagger-ui/|/v3/) {
+        proxy_pass         http://worker;
+        proxy_buffering    off;
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+      }

@@ -1,0 +1,97 @@
+---
+- name: All Servers Preparation
+  hosts: all
+  become: true
+  tags:
+    - common
+  roles:
+    - role: common
+
+- name: S3 Deployment [dev only]
+  hosts: s3
+  become: true
+  tags:
+    - s3
+  roles:
+    - role: docker
+      when: env == "dev"
+    - role: container
+      when: env == "dev"
+  tasks:
+    - name: S3 Provisioning
+      ansible.builtin.include_role:
+        name: container
+      vars:
+        container_name: s3_provisioner
+        container_image: minio/mc
+        container_ports: []
+        container_healthcheck: {}
+        container_restart_policy: on-failure
+        container_entrypoint: >
+          /bin/sh -c "
+          /usr/bin/mc alias set s3 {{ s3_endpoint }} {{ minio_user }} {{ minio_password }};
+          /usr/bin/mc mb s3/{{ bucket_name }};
+          exit 0;
+          "
+
+
+- name: Database Deployment
+  hosts: db
+  become: true
+  tags:
+    - db
+  roles:
+    - role: docker
+    - role: container
+
+- name: Worker Deployment
+  hosts: workers
+  become: true
+  tags:
+    - worker
+  roles:
+    - role: docker
+    - role: container
+
+- name: Certbot Deployment
+  hosts: webservers
+  become: true
+  tags:
+    - certbot
+  roles:
+    - role: nginx
+      vars:
+        nginx_vhosts:
+          - filename: "{{ domain_name }}.80.conf"
+            listen: "80 default_server"
+            server_name: "{{ domain_name }}"
+            extra_parameters: |
+              location ^~ /.well-known/acme-challenge/ {
+                  root {{ vhost_root }};
+                  allow all;
+                  try_files $uri =404;
+              }
+              location / {
+                  return 301 https://$server_name$request_uri;
+              }
+      when: env != "dev"
+    - role: certbot
+      when: env != "dev"
+
+- name: Webservers Deployment
+  hosts: webservers
+  become: true
+  tags:
+    - webserver
+  roles:
+    - role: nginx
+  tasks:
+    - name: Frontend Deployment
+      ansible.builtin.unarchive:
+        src: "{{ frontend_artifact }}"
+        dest: "{{ vhost_root }}"
+        remote_src: true
+        include:
+          - "package/dist/"
+        extra_opts:
+          - --strip-components=2

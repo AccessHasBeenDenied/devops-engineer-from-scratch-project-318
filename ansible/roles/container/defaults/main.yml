@@ -1,0 +1,19 @@
+---
+# defaults file for container
+container_data_dir: /srv/data/container
+container_log_dir: /srv/logs/container
+
+container_name: container
+container_image: bash
+container_command: []
+container_entrypoint: []
+container_command_handling: compatibility
+container_restart_policy: unless-stopped
+container_env: {}
+container_ports:
+  - "8080:8080"
+container_volumes:
+  - "{{ container_data_dir }}:/app/container/data"
+container_healthcheck: {}
+container_healthy_wait_timeout: 60
+container_rollback: false

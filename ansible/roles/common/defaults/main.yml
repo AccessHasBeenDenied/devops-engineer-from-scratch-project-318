@@ -1,0 +1,5 @@
+---
+# defaults file for common
+
+common_apt_update: false
+common_apt_packages: []
