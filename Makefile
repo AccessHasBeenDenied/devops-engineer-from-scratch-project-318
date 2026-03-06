@@ -9,7 +9,7 @@ infra-up/prod:
 # deploy
 deploy/dev:
 	@echo "Starting dev deployment..."
-	( cd ansible && ansible-playbook -i inventories/dev -u vagrant playbooks/playbook-observability.yml -t grafana )
+	( cd ansible && ansible-playbook -i inventories/dev -u vagrant playbooks/playbook-observability.yml )
 
 deploy/prod:
 	@echo "Starting prod deployment..."

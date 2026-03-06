@@ -1,0 +1,21 @@
+alertmanager_user_id: 65534
+alertmanager_group_id: 65534
+container_conf_dir: /srv/conf/alertmanager
+container_data_dir: /srv/data/alertmanager
+
+container_name: alertmanager
+container_image: prom/alertmanager:v0.31.1
+container_restart_policy: unless-stopped
+container_env:
+  TZ=Europe/Moscow
+container_ports: 
+  - "9093:9093"
+container_volumes:
+  - "{{ container_conf_dir }}/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
+container_healthcheck:
+  test: ["CMD-SHELL", "wget --quiet --tries=1 -O /dev/null http://localhost:9093/-/healthy"]
+  interval: 10s
+  timeout: 5s
+  retries: 3
+  start_period: 10s
+container_healthy_wait_timeout: 60

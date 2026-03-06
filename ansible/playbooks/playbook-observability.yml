@@ -58,3 +58,28 @@
   roles:
     - role: docker
     - role: container
+
+- name: Alertmanager Deployment
+  hosts: alertmanager
+  become: true
+  tags:
+    - alertmanager
+  pre_tasks:
+    - name: Creating Conf Dir
+      ansible.builtin.file:
+        path: "{{ container_conf_dir }}"
+        state: directory
+        mode: "0750"
+    - name: Creating Data Dir
+      ansible.builtin.file:
+        path: "{{ container_data_dir }}"
+        state: directory
+        owner: "{{ alertmanager_user_id }}"
+        group: "{{ alertmanager_group_id }}"
+    - name: Alertmanager Config
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../templates/alertmanager.yml.j2"
+        dest: "{{ container_conf_dir }}/alertmanager.yml"
+  roles:
+    - role: docker
+    - role: container
