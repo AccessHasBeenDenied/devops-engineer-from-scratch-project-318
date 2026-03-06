@@ -1,0 +1,21 @@
+container_conf_dir: /srv/conf/prometheus
+container_data_dir: /srv/data/prometheus
+# container_log_dir: /srv/logs/prometheus
+
+container_name: prometheus
+container_image: prom/prometheus:v3.10.0
+container_restart_policy: unless-stopped
+container_env:
+  TZ=Europe/Moscow
+container_ports: 
+  - "9090:9090"
+container_volumes:
+  - "{{ container_conf_dir }}/prometheus.yml:/etc/prometheus/prometheus.yml"
+  # - "{{ container_data_dir }}:/prometheus"
+container_healthcheck:
+  test: ["CMD-SHELL", "wget --quiet --tries=1 -O /dev/null http://localhost:9090/-/healthy"]
+  interval: 10s
+  timeout: 5s
+  retries: 3
+  start_period: 10s
+container_healthy_wait_timeout: 60

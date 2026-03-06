@@ -1,1 +1,29 @@
-###
+---
+- name: All Servers Preparation
+  hosts: all
+  become: true
+  tags:
+    - common
+  roles:
+    - role: common
+
+
+- name: Prometheus Deployment
+  hosts: prometheus
+  become: true
+  tags:
+    - prometheus
+  pre_tasks:
+    - name: Creating Conf Dir
+      ansible.builtin.file:
+        path: "{{ container_conf_dir }}"
+        state: directory
+        mode: "0750"
+    - name: Prometheus Config
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../templates/prometheus.yml.j2"
+        dest: "{{ container_conf_dir }}/prometheus.yml"
+
+  roles:
+    - role: docker
+    - role: container

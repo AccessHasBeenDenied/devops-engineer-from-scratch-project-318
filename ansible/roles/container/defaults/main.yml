@@ -1,5 +1,6 @@
 ---
 # defaults file for container
+container_conf_dir: /srv/conf/container
 container_data_dir: /srv/data/container
 container_log_dir: /srv/logs/container
 
