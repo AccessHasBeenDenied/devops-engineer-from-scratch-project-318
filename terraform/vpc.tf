@@ -2,13 +2,9 @@ module "net" {
   source              = "git::https://github.com/terraform-yc-modules/terraform-yc-vpc.git?ref=1.0.9"
   labels              = { tag = "hexlet-devops" }
   network_description = "hexlet project"
-  network_name        = "vpc-hexlet2"
+  network_name        = "vpc-hexlet"
   create_vpc          = true
   create_nat_gw       = true
-  s3_private_endpoint = {
-    enable = true
-    private_dns_records_enabled = false
-  }
   public_subnets = [
     {
       "v4_cidr_blocks" : ["10.121.0.0/16"],
