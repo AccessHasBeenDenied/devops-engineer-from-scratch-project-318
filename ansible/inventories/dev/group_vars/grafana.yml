@@ -1,0 +1,22 @@
+grafana_user_id: 472
+grafana_group_id: 0
+container_conf_dir: /srv/conf/grafana
+container_data_dir: /srv/data/grafana
+
+container_name: grafana
+container_image: grafana/grafana:12.3
+container_restart_policy: unless-stopped
+container_env:
+  TZ: "Europe/Moscow"
+container_ports: 
+  - "3000:3000"
+container_volumes:
+  - "{{ container_conf_dir }}:/etc/grafana/provisioning/"
+  - "{{ container_data_dir }}:/var/lib/grafana"
+container_healthcheck:
+  test: ["CMD-SHELL", "wget --quiet --tries=1 -O /dev/null http://localhost:3000/api/health"]
+  interval: 10s
+  timeout: 5s
+  retries: 3
+  start_period: 10s
+container_healthy_wait_timeout: 60

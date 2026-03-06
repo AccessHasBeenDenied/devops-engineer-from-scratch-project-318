@@ -29,7 +29,32 @@
       ansible.builtin.template:
         src: "{{ playbook_dir }}/../templates/prometheus.yml.j2"
         dest: "{{ container_conf_dir }}/prometheus.yml"
+  roles:
+    - role: docker
+    - role: container
 
+
+- name: Grafana Deployment
+  hosts: grafana
+  become: true
+  tags:
+    - grafana
+  pre_tasks:
+    - name: Creating Conf Dir
+      ansible.builtin.file:
+        path: "{{ container_conf_dir }}"
+        state: directory
+        mode: "0750"
+    - name: Creating Data Dir
+      ansible.builtin.file:
+        path: "{{ container_data_dir }}"
+        state: directory
+        owner: "{{ grafana_user_id }}"
+        group: "{{ grafana_group_id }}"
+    # - name: Grafana Config
+    #   ansible.builtin.template:
+    #     src: "{{ playbook_dir }}/../templates/prometheus.yml.j2"
+    #     dest: "{{ container_conf_dir }}/prometheus.yml"
   roles:
     - role: docker
     - role: container
