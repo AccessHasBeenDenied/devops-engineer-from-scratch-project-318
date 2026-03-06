@@ -1,3 +1,5 @@
+prometheus_user_id: 65534
+prometheus_group_id: 65534
 container_conf_dir: /srv/conf/prometheus
 container_data_dir: /srv/data/prometheus
 # container_log_dir: /srv/logs/prometheus
@@ -11,7 +13,7 @@ container_ports:
   - "9090:9090"
 container_volumes:
   - "{{ container_conf_dir }}/prometheus.yml:/etc/prometheus/prometheus.yml"
-  # - "{{ container_data_dir }}:/prometheus"
+  - "{{ container_data_dir }}:/prometheus"
 container_healthcheck:
   test: ["CMD-SHELL", "wget --quiet --tries=1 -O /dev/null http://localhost:9090/-/healthy"]
   interval: 10s

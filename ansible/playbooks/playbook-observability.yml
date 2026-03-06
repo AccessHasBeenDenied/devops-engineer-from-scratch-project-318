@@ -19,6 +19,12 @@
         path: "{{ container_conf_dir }}"
         state: directory
         mode: "0750"
+    - name: Creating Data Dir
+      ansible.builtin.file:
+        path: "{{ container_data_dir }}"
+        state: directory
+        owner: "{{ prometheus_user_id }}"
+        group: "{{ prometheus_group_id }}"
     - name: Prometheus Config
       ansible.builtin.template:
         src: "{{ playbook_dir }}/../templates/prometheus.yml.j2"
