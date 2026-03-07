@@ -1,5 +1,27 @@
 scrape_configs:
-  - job_name: node
+  - job_name: node-exporter
     scrape_interval: 5s
     static_configs:
-    - targets: ['node-exporter:9100']
+    - targets: 
+{% set target_list = [] %}
+{% for host in groups['all'] %}
+{%   set target_ip = hostvars[host]['ansible_host'] if hostvars[host]['ansible_host'] is defined else host %}
+{%   set _ = target_list.append(target_ip) %}
+{% endfor %}
+{% for target in target_list | unique %}
+      - {{ target }}:9100
+{% endfor %}
+
+  - job_name: bulletin
+    scrape_interval: 5s
+    metrics_path: /actuator/prometheus
+    static_configs:
+    - targets:
+{% set target_list = [] %}
+{% for host in groups['workers'] %}
+{%   set target_ip = hostvars[host]['ansible_host'] if hostvars[host]['ansible_host'] is defined else host %}
+{%   set _ = target_list.append(target_ip) %}
+{% endfor %}
+{% for target in target_list | unique %}
+      - {{ target }}:9090
+{% endfor %}

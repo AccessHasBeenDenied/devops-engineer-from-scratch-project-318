@@ -4,6 +4,7 @@ all:
       hosts:
         web01.example.com:
           ansible_host: 192.168.56.10
+          enable_node_exporter: true
     workers:
       hosts:
         worker01.example.com:
@@ -21,6 +22,7 @@ all:
       hosts:
         prometheus.example.com:
           ansible_host: 192.168.56.11
+          enable_node_exporter: true
     alertmanager:
       hosts:
         alertmanager.example.com:

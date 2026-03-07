@@ -1,2 +1,5 @@
 env: dev
 bucket_name: bulletin
+
+common_apt_packages: 
+  - prometheus-node-exporter

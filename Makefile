@@ -6,11 +6,10 @@ infra-up/dev:
 infra-up/prod:
 	@echo "Starting prod environment..."
 
-# deploy
-deploy/dev:
+deploy-obs/dev:
 	@echo "Starting dev deployment..."
 	( cd ansible && ansible-playbook -i inventories/dev -u vagrant playbooks/playbook-observability.yml )
 
 deploy/prod:
 	@echo "Starting prod deployment..."
-	ansible-playbook -i inventory/prod --ask-vault-pass playbook.yml
+	( cd ansible && ansible-playbook -i inventories/prod playbooks/playbook-observability.yml )
