@@ -42,19 +42,22 @@
   pre_tasks:
     - name: Creating Conf Dir
       ansible.builtin.file:
-        path: "{{ container_conf_dir }}"
+        path: "{{ container_conf_dir }}/{{ item }}"
         state: directory
         mode: "0750"
+      loop:
+        - datasources
+        - dashboards
     - name: Creating Data Dir
       ansible.builtin.file:
         path: "{{ container_data_dir }}"
         state: directory
         owner: "{{ grafana_user_id }}"
         group: "{{ grafana_group_id }}"
-    # - name: Grafana Config
-    #   ansible.builtin.template:
-    #     src: "{{ playbook_dir }}/../templates/prometheus.yml.j2"
-    #     dest: "{{ container_conf_dir }}/prometheus.yml"
+    - name: Grafana Provisioners
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../templates/grafana/datasources/datasources.yml.j2"
+        dest: "{{ container_conf_dir }}/datasources/datasources.yml"
   roles:
     - role: docker
     - role: container

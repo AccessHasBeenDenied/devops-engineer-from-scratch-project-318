@@ -3,3 +3,6 @@
 
 - name: Common Packages
   ansible.builtin.include_tasks: packages.yml
+
+- name: Adding hosts to hosts
+  ansible.builtin.include_tasks: naming.yml

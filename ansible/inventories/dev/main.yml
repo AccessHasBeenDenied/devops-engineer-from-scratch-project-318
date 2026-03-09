@@ -3,31 +3,31 @@ all:
     webservers:
       hosts:
         web01.example.com:
-          ansible_host: 192.168.56.10
+          ansible_host: app-host
           enable_node_exporter: true
     workers:
       hosts:
         worker01.example.com:
-          ansible_host: 192.168.56.10
+          ansible_host: app-host
     db:
       hosts:
         db01.example.com:
-          ansible_host: 192.168.56.10
+          ansible_host: app-host
     s3:
       hosts:
         s3.example.com:
-          ansible_host: 192.168.56.10
+          ansible_host: app-host
 
     prometheus:
       hosts:
         prometheus.example.com:
-          ansible_host: 192.168.56.11
+          ansible_host: monitoring
           enable_node_exporter: true
     alertmanager:
       hosts:
         alertmanager.example.com:
-          ansible_host: 192.168.56.11
+          ansible_host: monitoring
     grafana:
       hosts:
         grafana.example.com:
-          ansible_host: 192.168.56.11
+          ansible_host: monitoring

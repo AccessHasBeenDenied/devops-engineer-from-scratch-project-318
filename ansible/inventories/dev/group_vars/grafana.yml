@@ -8,6 +8,9 @@ container_image: grafana/grafana:12.3
 container_restart_policy: unless-stopped
 container_env:
   TZ: "Europe/Moscow"
+  GF_SECURITY_ADMIN_USER: "{{ grafana_user }}"
+  GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_password }}"
+
 container_ports: 
   - "3000:3000"
 container_volumes:

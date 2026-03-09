@@ -1,0 +1,11 @@
+{%   set host = groups['prometheus'][0] %}
+{%   set target_ip = hostvars[host]['ansible_host'] if hostvars[host]['ansible_host'] is defined else host %}
+
+apiVersion: 1
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://{{ target_ip }}:9090
+    isDefault: true
+    editable: true
