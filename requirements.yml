@@ -2,7 +2,8 @@
 collections:
   - name: community.docker
     version: ">=5.0.1"
-
+  - name: grafana.grafana
+    version: ">=6.0.6"
 
 roles:
   - src: geerlingguy.docker

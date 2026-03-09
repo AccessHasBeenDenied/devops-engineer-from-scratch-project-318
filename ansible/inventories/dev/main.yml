@@ -31,3 +31,7 @@ all:
       hosts:
         grafana.example.test:
           ansible_host: monitoring.example.test
+    loki:
+      hosts:
+        loki.example.test:
+          ansible_host: monitoring.example.test

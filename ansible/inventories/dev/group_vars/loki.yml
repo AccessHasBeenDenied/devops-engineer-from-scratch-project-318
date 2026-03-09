@@ -1,0 +1,23 @@
+loki_user_id: 10001
+loki_group_id: 10001
+container_conf_dir: /srv/conf/loki
+container_data_dir: /srv/data/loki
+
+container_name: loki
+container_image: grafana/loki:3.6.7
+container_restart_policy: unless-stopped
+container_env:
+  TZ: "Europe/Moscow"
+container_ports: 
+  - "3100:3100"
+container_volumes:
+#   - "{{ container_conf_dir }}:/etc/loki/"
+   - "{{ container_data_dir }}:/loki"
+container_healthcheck:
+  test: ["CMD", "loki", "-health"]
+#  test: ["CMD", "wget --quiet --tries=1 -O /dev/null http://localhost:3100/ready"]
+  interval: 10s
+  timeout: 5s
+  retries: 3
+  start_period: 10s
+container_healthy_wait_timeout: 60
