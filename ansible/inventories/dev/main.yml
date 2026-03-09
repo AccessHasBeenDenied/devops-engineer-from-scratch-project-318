@@ -2,32 +2,32 @@ all:
   children:
     webservers:
       hosts:
-        web01.example.com:
-          ansible_host: app-host
+        web01.example.test:
+          ansible_host: app-host.example.test
           enable_node_exporter: true
     workers:
       hosts:
-        worker01.example.com:
-          ansible_host: app-host
+        worker01.example.test:
+          ansible_host: app-host.example.test
     db:
       hosts:
-        db01.example.com:
-          ansible_host: app-host
+        db01.example.test:
+          ansible_host: app-host.example.test
     s3:
       hosts:
-        s3.example.com:
-          ansible_host: app-host
+        s3.example.test:
+          ansible_host: app-host.example.test
 
     prometheus:
       hosts:
-        prometheus.example.com:
-          ansible_host: monitoring
+        prometheus.example.test:
+          ansible_host: monitoring.example.test
           enable_node_exporter: true
     alertmanager:
       hosts:
-        alertmanager.example.com:
-          ansible_host: monitoring
+        alertmanager.example.test:
+          ansible_host: monitoring.example.test
     grafana:
       hosts:
-        grafana.example.com:
-          ansible_host: monitoring
+        grafana.example.test:
+          ansible_host: monitoring.example.test

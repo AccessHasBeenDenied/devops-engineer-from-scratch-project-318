@@ -6,3 +6,4 @@
 
 - name: Adding hosts to hosts
   ansible.builtin.include_tasks: naming.yml
+  when: common_enabled_hosts_naming is defined and common_enabled_hosts_naming == true

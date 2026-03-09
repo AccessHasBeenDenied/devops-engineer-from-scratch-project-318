@@ -3,3 +3,5 @@
 
 common_apt_update: false
 common_apt_packages: []
+
+common_enabled_hosts_naming: false
