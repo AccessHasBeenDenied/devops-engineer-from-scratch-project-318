@@ -6,6 +6,12 @@ collections:
     version: ">=6.0.6"
 
 roles:
+  - src: geerlingguy.nginx
+    name: nginx
+    version: "3.3.0"
+  - src: geerlingguy.certbot
+    name: certbot
+    version: "5.4.1" 
   - src: geerlingguy.docker
     name: docker
     version: "8.0.0" 
