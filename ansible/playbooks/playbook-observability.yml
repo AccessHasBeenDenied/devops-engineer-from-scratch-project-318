@@ -6,6 +6,7 @@
     - common
   roles:
     - role: common
+    - role: docker
     - role: grafana.grafana.promtail
 
 - name: Loki Deployment
@@ -25,12 +26,7 @@
         state: directory
         owner: "{{ loki_user_id }}"
         group: "{{ loki_group_id }}"
-#    - name: Prometheus Config
-#      ansible.builtin.template:
-#        src: "{{ playbook_dir }}/../templates/prometheus.yml.j2"
-#        dest: "{{ container_conf_dir }}/prometheus.yml"
   roles:
-    - role: docker
     - role: container
 
 - name: Prometheus Deployment
@@ -55,7 +51,6 @@
         src: "{{ playbook_dir }}/../templates/prometheus.yml.j2"
         dest: "{{ container_conf_dir }}/prometheus.yml"
   roles:
-    - role: docker
     - role: container
 
 
@@ -84,7 +79,6 @@
         src: "{{ playbook_dir }}/../templates/grafana/datasources/datasources.yml.j2"
         dest: "{{ container_conf_dir }}/datasources/datasources.yml"
   roles:
-    - role: docker
     - role: container
 
 - name: Alertmanager Deployment
@@ -109,5 +103,4 @@
         src: "{{ playbook_dir }}/../templates/alertmanager.yml.j2"
         dest: "{{ container_conf_dir }}/alertmanager.yml"
   roles:
-    - role: docker
     - role: container
