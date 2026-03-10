@@ -25,3 +25,17 @@ scrape_configs:
 {% for target in target_list | unique %}
       - {{ target }}:9090
 {% endfor %}
+
+  - job_name: nginx
+    scrape_interval: 5s
+    metrics_path: /metrics
+    static_configs:
+    - targets:
+{% set target_list = [] %}
+{% for host in groups['webservers'] %}
+{%   set target_ip = hostvars[host]['ansible_host'] if hostvars[host]['ansible_host'] is defined else host %}
+{%   set _ = target_list.append(target_ip) %}
+{% endfor %}
+{% for target in target_list | unique %}
+      - {{ target }}:9113
+{% endfor %}

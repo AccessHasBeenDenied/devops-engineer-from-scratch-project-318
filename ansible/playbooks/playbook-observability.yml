@@ -74,10 +74,21 @@
         state: directory
         owner: "{{ grafana_user_id }}"
         group: "{{ grafana_group_id }}"
-    - name: Grafana Provisioners
+    - name: Grafana Datasource Provisioners
       ansible.builtin.template:
         src: "{{ playbook_dir }}/../templates/grafana/datasources/datasources.yml.j2"
         dest: "{{ container_conf_dir }}/datasources/datasources.yml"
+    - name: Grafana Dashboards Provisioners
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../templates/grafana/dashboards.yml"
+        dest: "{{ container_conf_dir }}/dashboards/dashboards.yml"
+    - name: Copy Dashboards
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../templates/grafana/dashboards/"
+        dest: "{{ container_data_dir }}/dashboards/"
+        owner: "{{ grafana_user_id }}"
+        group: "{{ grafana_group_id }}"
+        mode: '0755'
   roles:
     - role: container
 
@@ -102,5 +113,13 @@
       ansible.builtin.template:
         src: "{{ playbook_dir }}/../templates/alertmanager.yml.j2"
         dest: "{{ container_conf_dir }}/alertmanager.yml"
+  roles:
+    - role: container
+
+- name: Nginx Prometheus Exporter Deployment
+  hosts: webservers
+  become: true
+  tags:
+    - nginx-exporter
   roles:
     - role: container

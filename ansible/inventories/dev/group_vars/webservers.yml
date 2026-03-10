@@ -49,4 +49,13 @@ nginx_vhosts:
       location /stub_status {
           stub_status;
           allow 127.0.0.1;
+          deny all;
       }
+
+container_name: nginx_exporter
+container_command: --nginx.scrape-uri=http://192.168.0.96:8081/stub_status
+container_image: nginx/nginx-prometheus-exporter:1.5.1
+container_restart_policy: unless-stopped
+container_ports: 
+  - "9113:9113"
+container_volumes: []
