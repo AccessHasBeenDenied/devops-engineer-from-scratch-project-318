@@ -6,7 +6,7 @@
     - common
   roles:
     - role: common
-#    - role: grafana.grafana.promtail
+    - role: grafana.grafana.promtail
 
 - name: Loki Deployment
   hosts: loki
